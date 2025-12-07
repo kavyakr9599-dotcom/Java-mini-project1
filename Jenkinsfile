@@ -52,7 +52,7 @@ pipeline {
 post {
   success {
     echo "job built successfully"
-    archiveArtifacts artifacts: '*/target/.war'
+    archiveArtifacts artifacts: '**/target/*.war'
   }
   failure {
     echo "job built was a failure"
