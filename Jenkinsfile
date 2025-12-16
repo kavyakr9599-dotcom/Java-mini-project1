@@ -18,6 +18,20 @@ pipeline {
       }
     }
   }
+    stage('Upload to JFrog') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'jfrog-creds',
+                                                 usernameVariable: 'JFROG_USER',
+                                                 passwordVariable: 'JFROG_PASS')]) {
+                    sh '''
+                        echo "Uploading WAR to JFrog..."
+                        WAR_FILE=$(ls sample-app/target/*.war)
+                        curl -u $JFROG_USER:$JFROG_PASS -T $WAR_FILE \
+                        "https://trial0clq38.jfrog.io/artifactory/api/generic/java-project-generic-local/${JOB_NAME}-${BUILD_NUMBER}-sample.war"
+                    '''
+                }
+            }
+        }
   stage('deploy') {
     steps {
       sshagent(credentials: ['tomcat_ssh_key']) {
@@ -27,7 +41,7 @@ pipeline {
                         FILE_NAME=\$(basename "\$WAR_FILE")
 
                         # Hardcoded Tomcat Server Details
-                        SERVER_IP=13.60.210.40
+                        SERVER_IP=51.20.91.137
                         SERVER_USER=ubuntu
                         TOMCAT_DIR=/opt/tomcat/webapps
 
