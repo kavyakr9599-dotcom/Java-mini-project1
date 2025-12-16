@@ -4,6 +4,9 @@ pipeline {
         jdk 'jdk17'
         maven 'maven3'
     }
+    parameters {
+      string(name: 'Tomcat_IP', defaultValue: '16.171.197.33', description: 'IP of tomcat')
+    }
     stages {
       stage('Checkout Code') {
             steps {
@@ -41,7 +44,7 @@ pipeline {
                         FILE_NAME=\$(basename "\$WAR_FILE")
 
                         # Hardcoded Tomcat Server Details
-                        SERVER_IP=56.228.10.239
+                        SERVER_IP=${params.Tomcat_IP}
                         SERVER_USER=ubuntu
                         TOMCAT_DIR=/opt/tomcat/webapps
 
