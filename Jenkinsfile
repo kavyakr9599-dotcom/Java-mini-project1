@@ -31,7 +31,7 @@ pipeline {
                                                  passwordVariable: 'JFROG_PASS')]) {
                     sh '''
                         echo "Uploading WAR to JFrog..."
-                        WAR_FILE=$(ls sample-app/target/*.war | head -1)
+                        WAR_FILE=$(ls sample-app/target/*.war | head -n 1)
                         if [ -z "$WAR_FILE" ]; then
                         echo "WAR file not found! Aborting."
                         exit 1
@@ -48,7 +48,7 @@ pipeline {
       sshagent(credentials: ['tomcat_ssh_key']) {
         sh """
         echo "deploying war to tomcat server"
-        WAR_FILE=\$(ls sample-app/target/*.war | head -1)
+        WAR_FILE=\$(ls sample-app/target/*.war | head -n 1)
                         FILE_NAME=\$(basename "\$WAR_FILE")
 
                         # Hardcoded Tomcat Server Details
