@@ -31,7 +31,11 @@ pipeline {
                                                  passwordVariable: 'JFROG_PASS')]) {
                     sh '''
                         echo "Uploading WAR to JFrog..."
-                        WAR_FILE=$(ls sample-app/target/*.war)
+                        WAR_FILE=$(ls sample-app/target/*.war | head -1)
+                        if [ -z "$WAR_FILE" ]; then
+                        echo "WAR file not found! Aborting."
+                        exit 1
+                    fi
                         curl -u $JFROG_USER:$JFROG_PASS -T $WAR_FILE \
                         "https://trial0clq38.jfrog.io/artifactory/java-project-generic-local/${JOB_NAME}-${BUILD_NUMBER}-sample.war/${JOB_NAME}-${BUILD_NUMBER}-sample.war"
                     '''
@@ -44,7 +48,7 @@ pipeline {
       sshagent(credentials: ['tomcat_ssh_key']) {
         sh """
         echo "deploying war to tomcat server"
-        WAR_FILE=\$(ls sample-app/target/*.war)
+        WAR_FILE=\$(ls sample-app/target/*.war | head -1)
                         FILE_NAME=\$(basename "\$WAR_FILE")
 
                         # Hardcoded Tomcat Server Details
