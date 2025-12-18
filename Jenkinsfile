@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     tools {
         jdk 'jdk17'
         maven 'maven3'
@@ -9,12 +9,14 @@ pipeline {
     }
     stages {
       stage('Checkout Code') {
+        agent { label 'master' }
             steps {
                 git branch: 'main',
                     url: 'https://github.com/kavyakr9599-dotcom/Java-mini-project1.git'
             }
         }
   stage('build') {
+    agent any
     steps {
       dir('sample-app') {
       sh 'mvn clean package -DskipTests'
@@ -22,6 +24,7 @@ pipeline {
     }
   }
     stage('Upload to JFrog') {
+      agent { label 'slave' }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jfrog-creds',
                                                  usernameVariable: 'JFROG_USER',
@@ -36,6 +39,7 @@ pipeline {
             }
         }
   stage('deploy') {
+    agent any
     steps {
       sshagent(credentials: ['tomcat_ssh_key']) {
         sh """
