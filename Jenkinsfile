@@ -9,7 +9,7 @@ pipeline {
     }
     stages {
       stage('Checkout Code') {
-        agent { label 'master' }
+        agent { label 'slave' }
             steps {
                 git branch: 'main',
                     url: 'https://github.com/kavyakr9599-dotcom/Java-mini-project1.git'
@@ -24,7 +24,7 @@ pipeline {
     }
   }
     stage('Upload to JFrog') {
-      agent { label 'slave' }
+      agent any
             steps {
                 withCredentials([usernamePassword(credentialsId: 'jfrog-creds',
                                                  usernameVariable: 'JFROG_USER',
