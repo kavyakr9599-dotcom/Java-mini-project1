@@ -5,7 +5,7 @@ pipeline {
         maven 'maven3'
     }
     parameters {
-      string(name: 'Tomcat_IP', defaultValue: '16.171.197.33', description: 'IP of tomcat')
+      string(name: 'Tomcat_IP', defaultValue: '16.171.197.33', description: 'IP of Sample App')
     }
     stages {
       stage('Checkout Code') {
